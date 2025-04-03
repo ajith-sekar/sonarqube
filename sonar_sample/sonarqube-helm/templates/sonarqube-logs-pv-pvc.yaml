@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sonarqube-logs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: sonarqube-sc
+  hostPath:
+    path: "/mnt/data/sonarqube/logs"
+    type: DirectoryOrCreate
+  claimRef:
+    name: sonarqube-logs-pvc
+    namespace: sonarqube
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarqube-logs-pvc
+  namespace: sonarqube
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: sonarqube-sc

@@ -1,0 +1,20 @@
+sonarqube:
+  image: "sonarqube:lts"
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 9000
+  ingress:
+    enabled: true
+    hostname: sonarqube.example.com
+
+postgresql:
+  image: "postgres:15"
+  username: sonar
+  password: sonar
+  database: sonarqube
+  storageSize: 10Gi
+
+persistence:
+  enabled: true
+  size: 10Gi
