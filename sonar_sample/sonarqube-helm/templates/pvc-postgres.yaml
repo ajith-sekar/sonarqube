@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
   namespace: sonarqube
+  labels:
+    app.kubernetes.io/instance: sonarqube
 spec:
   accessModes:
     - ReadWriteOnce
@@ -10,3 +12,4 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: postgres-sc
+  volumeMode: Filesystem
