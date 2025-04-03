@@ -14,52 +14,12 @@ spec:
         app: sonarqube
     spec:
       securityContext:
-        fsGroup: 999  # Ensure SonarQube has correct permissions
+        fsGroup: 1000  # Helps with volume permissions
       containers:
         - name: sonarqube
-          image: sonarqube:lts
+          image: docker.io/sonarqube:lts  # ✅ Added full path to image
           ports:
             - containerPort: 9000
           env:
-            - name: SONARQUBE_JDBC_URL
-              value: "jdbc:postgresql://postgresql.sonarqube.svc.cluster.local:5432/sonarqube"
-            - name: SONARQUBE_JDBC_USERNAME
-              value: "sonar"
-            - name: SONARQUBE_JDBC_PASSWORD
-              value: "sonar"
-          resources:
-            requests:
-              memory: "4Gi"  # Increased memory to prevent crashes
-              cpu: "1"
-            limits:
-              memory: "6Gi"
-              cpu: "2"
-          volumeMounts:
-            - name: sonarqube-data
-              mountPath: "/opt/sonarqube/data"
-            - name: sonarqube-logs
-              mountPath: "/opt/sonarqube/logs"
-            - name: sonarqube-extensions
-              mountPath: "/opt/sonarqube/extensions"
-          livenessProbe:
-            httpGet:
-              path: /api/system/status
-              port: 9000
-            initialDelaySeconds: 90
-            periodSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /api/system/status
-              port: 9000
-            initialDelaySeconds: 90
-            periodSeconds: 30
-      volumes:
-        - name: sonarqube-data
-          persistentVolumeClaim:
-            claimName: sonarqube-pvc
-        - name: sonarqube-logs
-          persistentVolumeClaim:
-            claimName: sonarqube-logs-pvc
-        - name: sonarqube-extensions
-          persistentVolumeClaim:
-            claimName: sonarqube-extensions-pvc
+            - name: SONAR_JDBC_URL
+              value: "jdbc:postgresql://postgresql:5432/sonarqube"
