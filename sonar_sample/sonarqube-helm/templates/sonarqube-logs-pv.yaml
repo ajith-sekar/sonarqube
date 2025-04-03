@@ -15,16 +15,3 @@ spec:
   claimRef:
     name: sonarqube-logs-pvc
     namespace: sonarqube
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: sonarqube-logs-pvc
-  namespace: sonarqube
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: sonarqube-sc
