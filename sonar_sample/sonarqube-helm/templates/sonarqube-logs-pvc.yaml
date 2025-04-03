@@ -3,6 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: sonarqube-logs-pvc
   namespace: sonarqube
+  labels:
+    app.kubernetes.io/name: sonarqube-logs
+    app.kubernetes.io/instance: sonarqube
 spec:
   accessModes:
     - ReadWriteOnce
@@ -10,3 +13,4 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: sonarqube-sc
+  volumeMode: Filesystem
