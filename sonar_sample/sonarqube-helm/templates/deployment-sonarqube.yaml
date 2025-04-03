@@ -17,9 +17,37 @@ spec:
         fsGroup: 1000  # Helps with volume permissions
       containers:
         - name: sonarqube
-          image: docker.io/sonarqube:lts  # ✅ Added full path to image
+          image: docker.io/sonarqube:lts  # ✅ Full image path
           ports:
             - containerPort: 9000
           env:
-            - name: SONAR_JDBC_URL
+            - name: SONARQUBE_JDBC_URL
               value: "jdbc:postgresql://postgresql:5432/sonarqube"
+            - name: SONARQUBE_JDBC_USERNAME
+              value: "sonar"
+            - name: SONARQUBE_JDBC_PASSWORD
+              value: "sonar"
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "500m"
+            limits:
+              memory: "4Gi"
+              cpu: "1"
+          volumeMounts:
+            - name: sonarqube-data
+              mountPath: "/opt/sonarqube/data"
+            - name: sonarqube-logs
+              mountPath: "/opt/sonarqube/logs"
+            - name: sonarqube-extensions
+              mountPath: "/opt/sonarqube/extensions"
+      volumes:
+        - name: sonarqube-data
+          persistentVolumeClaim:
+            claimName: sonarqube-pvc
+        - name: sonarqube-logs
+          persistentVolumeClaim:
+            claimName: sonarqube-logs-pvc
+        - name: sonarqube-extensions
+          persistentVolumeClaim:
+            claimName: sonarqube-extensions-pvc
