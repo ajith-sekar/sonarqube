@@ -13,6 +13,8 @@ spec:
       labels:
         app: sonarqube
     spec:
+      securityContext:
+        fsGroup: 999  # Ensure SonarQube has correct permissions
       containers:
         - name: sonarqube
           image: sonarqube:lts
@@ -20,18 +22,18 @@ spec:
             - containerPort: 9000
           env:
             - name: SONARQUBE_JDBC_URL
-              value: "jdbc:postgresql://postgresql:5432/sonarqube"
+              value: "jdbc:postgresql://postgresql.sonarqube.svc.cluster.local:5432/sonarqube"
             - name: SONARQUBE_JDBC_USERNAME
               value: "sonar"
             - name: SONARQUBE_JDBC_PASSWORD
               value: "sonar"
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "500m"
-            limits:
-              memory: "4Gi"
+              memory: "4Gi"  # Increased memory to prevent crashes
               cpu: "1"
+            limits:
+              memory: "6Gi"
+              cpu: "2"
           volumeMounts:
             - name: sonarqube-data
               mountPath: "/opt/sonarqube/data"
@@ -39,6 +41,18 @@ spec:
               mountPath: "/opt/sonarqube/logs"
             - name: sonarqube-extensions
               mountPath: "/opt/sonarqube/extensions"
+          livenessProbe:
+            httpGet:
+              path: /api/system/status
+              port: 9000
+            initialDelaySeconds: 90
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/system/status
+              port: 9000
+            initialDelaySeconds: 90
+            periodSeconds: 30
       volumes:
         - name: sonarqube-data
           persistentVolumeClaim:
