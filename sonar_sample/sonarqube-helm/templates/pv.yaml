@@ -11,4 +11,3 @@ spec:
   storageClassName: sonarqube-sc
   hostPath:
     path: "/mnt/data/sonarqube"
-    type: DirectoryOrCreate
