@@ -13,11 +13,9 @@ spec:
       labels:
         app: sonarqube
     spec:
-      securityContext:
-        fsGroup: 1000  # Helps with volume permissions
       containers:
         - name: sonarqube
-          image: docker.io/sonarqube:lts  # ✅ Full image path
+          image: sonarqube:lts
           ports:
             - containerPort: 9000
           env:
