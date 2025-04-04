@@ -13,17 +13,20 @@ spec:
       labels:
         app: sonarqube
     spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
         - name: sonarqube
-          image: sonarqube:lts
+          image: docker.io/sonarqube:lts
           ports:
             - containerPort: 9000
           env:
-            - name: SONARQUBE_JDBC_URL
+            - name: SONAR_JDBC_URL
               value: "jdbc:postgresql://postgresql:5432/sonarqube"
-            - name: SONARQUBE_JDBC_USERNAME
+            - name: SONAR_JDBC_USERNAME
               value: "sonar"
-            - name: SONARQUBE_JDBC_PASSWORD
+            - name: SONAR_JDBC_PASSWORD
               value: "sonar"
           resources:
             requests:
