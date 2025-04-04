@@ -1,56 +1,21 @@
 sonarqube:
-  image: "sonarqube:lts"
-  replicaCount: 1
+  image: sonarqube:10.4.0
+  port: 9000
+  type: LoadBalancer
+  storage:
+    data: 10Gi
+    extensions: 2Gi
+    logs: 1Gi
 
-  service:
-    type: LoadBalancer  # ✅ Changed to LoadBalancer
-    port: 9000
+postgres:
+  image: postgres:15
+  user: sonar
+  password: sonarpass
+  database: sonarqube
+  port: 5432
+  storage: 5Gi
 
-  ingress:
-    enabled: true
-    hostname: sonarqube.example.com
-
-  resources:
-    requests:
-      memory: "4Gi"
-      cpu: "1"
-    limits:
-      memory: "6Gi"
-      cpu: "2"
-
-  env:
-    - name: SONARQUBE_JDBC_URL
-      value: "jdbc:postgresql://postgresql.sonarqube.svc.cluster.local:5432/sonarqube"
-    - name: SONARQUBE_JDBC_USERNAME
-      value: "sonar"
-    - name: SONARQUBE_JDBC_PASSWORD
-      value: "sonar"
-
-  livenessProbe:
-    httpGet:
-      path: /api/system/status
-      port: 9000
-    initialDelaySeconds: 90
-    periodSeconds: 30
-
-  readinessProbe:
-    httpGet:
-      path: /api/system/status
-      port: 9000
-    initialDelaySeconds: 90
-    periodSeconds: 30
-
-postgresql:
+ingress:
   enabled: true
-  image: "postgres:15"
-  auth:
-    username: sonar
-    password: sonar
-    database: sonarqube
-  persistence:
-    enabled: true
-    size: 10Gi
-
-persistence:
-  enabled: true
-  size: 10Gi
+  hostname: sonarqube.local
+  className: nginx
