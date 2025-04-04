@@ -41,7 +41,7 @@ spec:
             - name: sonarqube-logs
               mountPath: "/opt/sonarqube/logs"
             - name: sonarqube-extensions
-              mountPath: "/opt/sonarqube/extensions"
+              mountPath: "/mnt/data/sonarqube-extension"
       volumes:
         - name: sonarqube-data
           persistentVolumeClaim:
