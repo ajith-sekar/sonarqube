@@ -8,5 +8,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
-  storageClassName: sonarqube-sc
+      storage: 1Gi
